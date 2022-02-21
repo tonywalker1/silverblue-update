@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily Fedora Silverblue Update Service
+ConditionPathExists=/run/ostree-booted
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/flatpak --system update -y; /usr/bin/rpm-ostree update
+
+[Install]
+WantedBy=timers.target
