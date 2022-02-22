@@ -1,10 +1,15 @@
+#
+# silverblue-update
+# Copyright (c) 2022 Tony Walker
+#
+
 [Unit]
 Description=Daily Fedora Silverblue Update Service
 ConditionPathExists=/run/ostree-booted
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/flatpak --system update -y; /usr/bin/rpm-ostree update
+ExecStart=/usr/local/bin/silverblue-update.sh
 
 [Install]
 WantedBy=timers.target
