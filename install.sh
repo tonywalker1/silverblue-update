@@ -26,6 +26,7 @@
 
 echo "Installing the Silverblue Daily Update Tool"
 
+# shellcheck disable=SC2046
 if [ $(whoami) != "root" ]; then
     echo "* ERROR: Must be root or use sudo."
     exit 1
@@ -38,8 +39,13 @@ systemctl disable rpm-ostreed-automatic.timer || exit 1
 echo "* Installing..."
 install -o root -g root -m 644 units/silverblue-update.timer /etc/systemd/system/ || exit 1
 install -o root -g root -m 644 units/silverblue-update.service /etc/systemd/system/ || exit 1
-install -o root -g root -m 755 bin/silverblue-update.sh /usr/local/bin/ || exit 1
+install -o root -g root -m 755 bin/silverblue-update /usr/local/bin/ || exit 1
 install -o root -g root -m 755 -d /var/run/silverblue-update || exit 1
+
+# remove version with old name
+if [ -f /usr/local/bin/silverblue-update.sh ]; then
+    rm -f /usr/local/bin/silverblue-update.sh
+fi
 
 echo "* Starting..."
 systemctl enable silverblue-update.timer || exit 1

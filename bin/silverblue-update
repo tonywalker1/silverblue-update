@@ -39,4 +39,6 @@ if ! /usr/bin/rpm-ostree update >/var/run/silverblue-update/rpm-ostree.log 2>&1;
     exit 1
 fi
 
+logger "silverblue-update: no errors"
+
 exit 0

@@ -28,7 +28,7 @@ ConditionPathExists=/run/ostree-booted
 
 [Service]
 Type=oneshot
-ExecStart=/usr/local/bin/silverblue-update.sh
+ExecStart=/usr/local/bin/silverblue-update
 
 [Install]
 WantedBy=timers.target
