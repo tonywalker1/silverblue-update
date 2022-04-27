@@ -26,8 +26,17 @@
 
 WITH_ERRORS="no"
 
+notify_all() {
+    for SOME_USER in /run/user/*; do
+        SOME_USER=$(basename "$SOME_USER")
+        sudo -u $(id -u -n "$SOME_USER") \
+            DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/"$SOME_USER"/bus notify-send -a "silverblue-update" "$1"
+    done
+}
+
 if ! /usr/bin/install -o root -g root -m 755 -d /var/run/silverblue-update; then
     logger "silverblue-update: Could not create /var/run/silverblue-update"
+    notify_all "Could not apply system updates!"
     exit 1
 fi
 
@@ -37,12 +46,14 @@ fi
 /usr/bin/flatpak update -y --appstream
 if ! /usr/bin/flatpak update -y --system --noninteractive >/var/run/silverblue-update/flatpak.log 2>&1; then
     logger "silverblue-update: Flatpak update failed"
+    notify_all "Could not update Flatpak applications!"
     WITH_ERRORS="yes"
 fi
 
 # rpm-ostree update
 if ! /usr/bin/rpm-ostree update >/var/run/silverblue-update/rpm-ostree.log 2>&1; then
     logger "silverblue-update: rpm-ostree update failed"
+    notify_all "Could not apply system updates!"
     WITH_ERRORS="yes"
 fi
 
