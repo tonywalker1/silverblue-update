@@ -24,21 +24,32 @@
 #
 #
 
+WITH_ERRORS="no"
+
 if ! /usr/bin/install -o root -g root -m 755 -d /var/run/silverblue-update; then
     logger "silverblue-update: Could not create /var/run/silverblue-update"
     exit 1
 fi
 
+# update Flatpaks
+/usr/bin/flatpak repair
+/usr/bin/flatpak uninstall -y --unused
+/usr/bin/flatpak update -y --appstream
 if ! /usr/bin/flatpak update -y --system --noninteractive >/var/run/silverblue-update/flatpak.log 2>&1; then
     logger "silverblue-update: Flatpak update failed"
-    exit 1
+    WITH_ERRORS="yes"
 fi
 
+# rpm-ostree update
 if ! /usr/bin/rpm-ostree update >/var/run/silverblue-update/rpm-ostree.log 2>&1; then
     logger "silverblue-update: rpm-ostree update failed"
-    exit 1
+    WITH_ERRORS="yes"
 fi
 
-logger "silverblue-update: no errors"
+if [ "$WITH_ERRORS" = "no" ]; then
+    logger "silverblue-update: completed without errors"
+else
+    logger "silverblue-update: errors during update"
+fi
 
 exit 0
