@@ -27,9 +27,10 @@ Description=Daily Fedora Silverblue Update Timer
 ConditionPathExists=/run/ostree-booted
 
 [Timer]
-OnBootSec=2m
+# OnBootSec=5m
+OnCalendar=*-*-* 18:00:00
 OnUnitActiveSec=22hr
-RandomizedDelaySec=4h
+#RandomizedDelaySec=30min
 
 [Install]
 WantedBy=timers.target
