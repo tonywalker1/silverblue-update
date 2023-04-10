@@ -13,7 +13,7 @@ This is a simple script that updates rpm-ostree and flatpak packages. It has thr
 
 Step 1: Clone or download the repository.
 
-Step 2: Edit `bin/silverblue-update.timer` to meet your needs. See below.
+Step 2: Edit `units/silverblue-update.timer` to meet your needs. See below.
 
 Step 3: Run `install.sh` from the root of the repository.
 
